@@ -12,9 +12,10 @@ def main():
     #in_df = data.DataPreProcess(in_df)
     model_obj = model.Model()
     model1 = model_obj.Defining()
-    train_x, test_x, train_y, test_y, revmap = data.timeSeriesToTrainingData(in_df, out_df)
+    label_dict,out_df = data.DataPreProcess(out_df)
+    train_x, test_x, train_y, test_y = data.timeSeriesToTrainingData(in_df, out_df)
     model_obj.Training(model1,train_x,train_y)
-    Confusion_matrix = model_obj.validation(test_x, test_y,revmap,model1)
+    model_obj.validation(test_x, test_y,label_dict,model1)
     #data.plot_confusion_matrix(Confusion_matrix, list(revmap.values()))
     return 0
 

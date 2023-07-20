@@ -5,7 +5,6 @@ import yaml
 import matplotlib.pyplot as plt
 from configparser import ConfigParser
 from sklearn.model_selection import train_test_split
-import tensorflow as tf
 from keras.utils import to_categorical
 from sklearn.preprocessing import StandardScaler
 from sklearn.metrics import *
@@ -69,23 +68,51 @@ class Data:
         #df = df.transpose(0,2,1)
         #ANy other preprocessing
         #return df
-    
-          
+    def DataPreProcess(self, OutDataFrame):
+        # TODO: Any preprocessing if required for "InputDataFrame"
+        ####################
+        # LABEL DISTRIBUTION
+        component = self.config['req_out']['req_out']
+        label = OutDataFrame
+        label = label[component] #considering only one of the component
+        # MAPPING LABEL
+        d_label, d_reverse_label = {}, {}
+        for i,lab in enumerate(label.unique()):
+            d_label[lab] = i
+            d_reverse_label[i] = lab
+
+        label = label.map(d_label)
+        OutDataFrame = to_categorical(label)
+
+        return (d_reverse_label,OutDataFrame)
+
     def timeSeriesToTrainingData(self, InputDataFrame, OutDataFrame):
         # Convert the InputDataFrame to Training Data with the output in the last column
-        label = OutDataFrame
-        label = label.Cooler #considering only cooler component
-        mapping = {3: 0, 20: 1, 100: 2}
-        reverse_map = {0:3, 1:20, 2:100}
-        label = label.map(mapping)
-
         df = InputDataFrame
-        y = to_categorical(label)
+        y = OutDataFrame
 
         X_train, X_test, y_train, y_test = train_test_split(df, y, random_state = 42, test_size=0.2)
         scaler = StandardScaler()
         X_train = scaler.fit_transform(X_train.reshape(-1, X_train.shape[-1])).reshape(X_train.shape)
         X_test = scaler.transform(X_test.reshape(-1, X_test.shape[-1])).reshape(X_test.shape)
         #TODO: return TrainingDataFrame
-        return (X_train, X_test, y_train, y_test, reverse_map)
+        return (X_train, X_test, y_train, y_test)
+          
+    # def timeSeriesToTrainingData(self, InputDataFrame, OutDataFrame):
+    #     # Convert the InputDataFrame to Training Data with the output in the last column
+    #     label = OutDataFrame
+    #     label = label.Cooler #considering only cooler component
+    #     mapping = {3: 0, 20: 1, 100: 2}
+    #     reverse_map = {0:3, 1:20, 2:100}
+    #     label = label.map(mapping)
+
+    #     df = InputDataFrame
+    #     y = to_categorical(label)
+
+    #     X_train, X_test, y_train, y_test = train_test_split(df, y, random_state = 42, test_size=0.2)
+    #     scaler = StandardScaler()
+    #     X_train = scaler.fit_transform(X_train.reshape(-1, X_train.shape[-1])).reshape(X_train.shape)
+    #     X_test = scaler.transform(X_test.reshape(-1, X_test.shape[-1])).reshape(X_test.shape)
+    #     #TODO: return TrainingDataFrame
+    #     return (X_train, X_test, y_train, y_test, reverse_map)
     
