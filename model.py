@@ -18,11 +18,14 @@ class Model:
     def __init__(self) -> None:
         pass
 
-    #def Defining(self):
-        # model = Sequential()
-        # model.add(LSTM(100, input_shape=()))
-        # model.add(Dropout(0.2))
-        # model.add(Dense(3))
+    def Defining2(self, train_x):
+        model = Sequential()
+        model.add(LSTM(100, input_shape=(train_x.shape[1], train_x.shape[2])))
+        model.add(Dropout(0.2))
+        model.add(Dense(1))
+        model.compile(loss=self.config['model_config']['loss_fun'], optimizer=self.config['model_config']['optimizer'])
+        print(model.summary())
+        return model
 
     def Defining(self):
         #TO BE abstracted 
