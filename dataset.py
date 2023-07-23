@@ -13,11 +13,14 @@ class Data:
     config = ConfigParser()
     config.read("configur.ini")
     path = config['paths']['inputlocation']
+    inputDataframe = pd.DataFrame()
+    outDataframe = pd.DataFrame()
+    rev_label_dict = {}
 
     def __init__(self) -> None:
         pass
         
-    def Dataset(self, data_file, file_type):
+    def dataset_read(self, data_file, file_type):
         if file_type == 'csv' or file_type == 'txt':
             return pd.read_csv(data_file, sep='\t', header=None)
         elif file_type == 'json':
@@ -31,44 +34,43 @@ class Data:
         else:
             raise ValueError(f"Unsupported file type: {file_type}")
         
-    def InputFrame(self):
+    def input_frame(self):
         sensors = self.config['file_names']['sensors'].split(',')
         in_df = pd.DataFrame()
         for txt in sensors:
-            read_df = self.Dataset(self.path+txt, self.config['file_type']['file_type'])
+            read_df = self.dataset_read(self.path+txt, self.config['file_type']['file_type'])
             in_df = in_df.append(read_df)
         in_df = in_df.sort_index().values.reshape(-1,len(sensors),len(in_df.columns)).transpose(0,2,1)
-        return in_df
+        self.inputDataframe = in_df
     
-    def OutFrame(self):
-        out_df = self.Dataset(self.path+self.config['file_names']['output'], self.config['file_type']['file_type'])
+    def out_frame(self):
+        out_df = self.dataset_read(self.path+self.config['file_names']['output'], self.config['file_type']['file_type'])
         out_df.columns = self.config['out_names']['out_names'].split(',')
-        return out_df
+        self.outDataframe = out_df
 
-    def InputData2D(self, in_df):
+    def input_data_2D(self):
         sensors = self.config['file_names']['sensors'].split(',')
-        in_df = in_df.reshape(-1,1,len(sensors)*(in_df.shape[1]))
-        return in_df
+        self.inputDataframe = self.inputDataframe.reshape(-1,1,len(sensors)*(self.inputDataframe.shape[1]))
     
-    def DataInsights(self, InputDataframe):
+    def data_insights(self):
         sensors = self.config['file_names']['sensors'].split(',')
         plt.figure(figsize=(8,5))
-        plt.plot(InputDataframe[0])
+        plt.plot(self.inputDataframe[0])
         plt.title('Original Data')
         plt.ylabel('Value')
         plt.xlabel('Time')
         np.set_printoptions(False)
         plt.legend(sensors)
         plt.show()
-        temp = pd.DataFrame(InputDataframe[0][:][:])
+        temp = pd.DataFrame(self.inputDataframe[0][:][:])
         print(temp.describe())
 
-    def DataPreProcess(self, OutDataFrame):
+    def data_preprocess(self):
         # TODO: Any preprocessing if required for "InputDataFrame"
         ####################
         # LABEL DISTRIBUTION
         component = self.config['req_out']['req_out']
-        label = OutDataFrame
+        label = self.outDataframe
         label = label[component] #considering only one of the component
         #print(label)
         # MAPPING LABEL
@@ -80,15 +82,15 @@ class Data:
         #print(d_reverse_label)
         label = label.map(d_label)
         #print(label)
-        OutDataFrame = to_categorical(label)
+        self.outDataframe = to_categorical(label)
         #OutDataFrame = label.values
         #print(OutDataFrame)
-        return (d_reverse_label,OutDataFrame)
+        self.rev_label_dict = d_reverse_label
 
-    def timeSeriesToTrainingData(self, InputDataFrame, OutDataFrame):
+    def timeseries_to_trainingdata(self):
         # Convert the InputDataFrame to Training Data with the output in the last column
-        df = InputDataFrame
-        y = OutDataFrame
+        df = self.inputDataframe
+        y = self.outDataframe
 
         X_train, X_test, y_train, y_test = train_test_split(df, y, random_state = 42, test_size=0.2)
         scaler = StandardScaler()

@@ -18,7 +18,7 @@ class Model:
     def __init__(self) -> None:
         pass
 
-    def Defining2(self, train_x):
+    def defining2(self, train_x):
         model = Sequential()
         model.add(LSTM(100, input_shape=(train_x.shape[1], train_x.shape[2])))
         model.add(Dropout(0.2))
@@ -27,7 +27,7 @@ class Model:
         print(model.summary())
         return model
 
-    def Defining(self):
+    def defining(self):
         #TO BE abstracted 
         #start
         LOSS_FUNCTION = self.config['model_config']['loss_fun']
@@ -65,7 +65,7 @@ class Model:
         return model_m
 
         
-    def Training(self,model_m, X_train, y_train):
+    def training(self,model_m, X_train, y_train):
         #batch size and no of epochs are variable (to abstract)
         BATCH_SIZE = 16
         EPOCHS = 10
