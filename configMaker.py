@@ -20,5 +20,17 @@ config["out_names"] = {
     "out_names" : "Cooler,Valve,Pump,Accumulator,Flag"
 }
 
+config["model_config"] = {
+    "loss_fun" : "categorical_crossentropy",
+    "act_fun" : "relu",
+    "dense_act_fun" : "softmax",
+    "time_periods" : "60",
+    "num_sensors" : "4",
+    "optimizer" : "adam",
+    "metrics" : "accuracy"
+}
+config["req_out"] = {
+    "req_out" : "Cooler"
+}
 with open("configur.ini", "w") as f:
     config.write(f)

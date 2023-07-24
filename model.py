@@ -91,10 +91,10 @@ class Model:
         cnf_matrix = confusion_matrix([label_dict[np.argmax(label)] for label in y_test], 
                                       [label_dict[label] for label in pred_test])
         plt.figure(figsize=(7,7))       
-        self.plot_confusion_matrix(cnf_matrix, list(label_dict.values()))
+        self.__plot_confusion_matrix(cnf_matrix, list(label_dict.values()))
         plt.show()
         
-    def plot_confusion_matrix(self,cm, classes, title='Confusion matrix', cmap=plt.cm.Blues):
+    def __plot_confusion_matrix(self,cm, classes, title='Confusion matrix', cmap=plt.cm.Blues):
         
         cm = cm.astype('float') / cm.sum(axis=1)[:, np.newaxis]
 

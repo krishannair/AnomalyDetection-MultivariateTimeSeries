@@ -16,6 +16,10 @@ class Data:
     inputDataframe = pd.DataFrame()
     outDataframe = pd.DataFrame()
     rev_label_dict = {}
+    train_x = None
+    train_y = None
+    test_x = None
+    test_y = None
 
     def __init__(self) -> None:
         pass
@@ -92,10 +96,8 @@ class Data:
         df = self.inputDataframe
         y = self.outDataframe
 
-        X_train, X_test, y_train, y_test = train_test_split(df, y, random_state = 42, test_size=0.2)
+        self.train_x, self.test_x, self.train_y, self.test_y = train_test_split(df, y, random_state = 42, test_size=0.2)
         scaler = StandardScaler()
-        X_train = scaler.fit_transform(X_train.reshape(-1, X_train.shape[-1])).reshape(X_train.shape)
-        X_test = scaler.transform(X_test.reshape(-1, X_test.shape[-1])).reshape(X_test.shape)
-        #TODO: return TrainingDataFrame
-        return (X_train, X_test, y_train, y_test)
+        self.train_x = scaler.fit_transform(self.train_x.reshape(-1, self.train_x.shape[-1])).reshape(self.train_x.shape)
+        self.test_x = scaler.transform(self.test_x.reshape(-1, self.test_x.shape[-1])).reshape(self.test_x.shape)
     
