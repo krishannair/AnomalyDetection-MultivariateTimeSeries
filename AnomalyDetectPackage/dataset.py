@@ -7,7 +7,6 @@ from configparser import ConfigParser
 from sklearn.model_selection import train_test_split
 from keras.utils import to_categorical
 from sklearn.preprocessing import StandardScaler
-from sklearn.metrics import *
 
 class Data:
     config = ConfigParser()

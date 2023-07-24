@@ -2,7 +2,7 @@ from keras.models import Sequential
 from keras.layers import LSTM
 from keras.layers import Dropout
 from keras.layers import Dense
-from sklearn.metrics import *
+from sklearn.metrics import confusion_matrix,classification_report
 import matplotlib.pyplot as plt
 import itertools
 import numpy as np
