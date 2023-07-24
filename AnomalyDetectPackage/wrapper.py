@@ -10,6 +10,7 @@ class Wrapper:
         self.data.out_frame()
         self.data.input_frame()
         self.data.data_insights()
+        self.data.data_preprocess()
         self.model1 = self.model_obj.defining()
         self.data.timeseries_to_trainingdata()
 
