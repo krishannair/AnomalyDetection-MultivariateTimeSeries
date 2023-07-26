@@ -67,8 +67,8 @@ class Model:
         
     def training(self,model_m, X_train, y_train):
         #batch size and no of epochs are variable (to abstract)
-        BATCH_SIZE = 16
-        EPOCHS = 10
+        BATCH_SIZE = int(self.config['model_config']['batch_size'])
+        EPOCHS = int(self.config['model_config']['episodes'])
 
         #training (fitting)
         history = model_m.fit(X_train, y_train, batch_size=BATCH_SIZE, epochs=EPOCHS, validation_split=0.2, verbose=2)
