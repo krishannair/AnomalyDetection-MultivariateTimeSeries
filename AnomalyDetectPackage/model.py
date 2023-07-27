@@ -18,7 +18,7 @@ class Model:
     def __init__(self) -> None:
         pass
 
-    def defining2(self, train_x):
+    def architecture2(self, train_x):
         model = Sequential()
         model.add(LSTM(100, input_shape=(train_x.shape[1], train_x.shape[2])))
         model.add(Dropout(0.2))
@@ -27,7 +27,7 @@ class Model:
         print(model.summary())
         return model
 
-    def defining(self):
+    def architecture(self):
         #TO BE abstracted 
         #start
         LOSS_FUNCTION = self.config['model_config']['loss_fun']
@@ -65,7 +65,7 @@ class Model:
         return model_m
 
         
-    def training(self,model_m, X_train, y_train):
+    def fit(self,model_m, X_train, y_train):
         #batch size and no of epochs are variable (to abstract)
         BATCH_SIZE = int(self.config['model_config']['batch_size'])
         EPOCHS = int(self.config['model_config']['episodes'])
@@ -81,10 +81,14 @@ class Model:
         plt.xlabel('epochs')
         plt.legend(['loss', 'val_loss'])
         plt.show()
+    
+    def prediction(self, x_test, model):
+        pred = model.predict(x_test)
+        return pred
 
-    def validation(self, X_test, y_test, label_dict, model):
-        pred_test = np.argmax(model.predict(X_test), axis=1)
-
+    def validation(self, x_test, y_test, label_dict, model):
+        pred = self.prediction(x_test, model)
+        pred_test = np.argmax(pred, axis = 1)
         print(classification_report([label_dict[np.argmax(label)] for label in y_test], 
                                     [label_dict[label] for label in pred_test]))
 

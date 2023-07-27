@@ -23,7 +23,7 @@ class Data:
     def __init__(self) -> None:
         pass
         
-    def dataset_read(self, data_file, file_type):
+    def __dataset_read(self, data_file, file_type):
         if file_type == 'csv' or file_type == 'txt':
             return pd.read_csv(data_file, sep='\t', header=None)
         elif file_type == 'json':
@@ -37,17 +37,17 @@ class Data:
         else:
             raise ValueError(f"Unsupported file type: {file_type}")
         
-    def input_frame(self):
+    def read_source_data(self):
         sensors = self.config['file_names']['sensors'].split(',')
         in_df = pd.DataFrame()
         for txt in sensors:
-            read_df = self.dataset_read(self.path+txt, self.config['file_type']['file_type'])
-            in_df = in_df.append(read_df)
+            read_df = self.__dataset_read(self.path+txt, self.config['file_type']['file_type'])
+            in_df = pd.concat([in_df,read_df])
         in_df = in_df.sort_index().values.reshape(-1,len(sensors),len(in_df.columns)).transpose(0,2,1)
         self.inputDataframe = in_df
     
-    def out_frame(self):
-        out_df = self.dataset_read(self.path+self.config['file_names']['output'], self.config['file_type']['file_type'])
+    def read_labels(self):
+        out_df = self.__dataset_read(self.path+self.config['file_names']['output'], self.config['file_type']['file_type'])
         out_df.columns = self.config['out_names']['out_names'].split(',')
         self.outDataframe = out_df
 
