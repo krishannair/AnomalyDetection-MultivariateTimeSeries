@@ -13,10 +13,9 @@ from keras.layers import GlobalAveragePooling1D
 from configparser import ConfigParser
 
 class Model:
-    config = ConfigParser()
-    config.read("configur.ini")
     def __init__(self) -> None:
-        pass
+        self.config = ConfigParser()
+        self.config.read("configur.ini")
 
     def architecture2(self, train_x):
         model = Sequential()
@@ -65,13 +64,13 @@ class Model:
         return model_m
 
         
-    def fit(self,model_m, X_train, y_train):
+    def fit(self,model_m, x_train, y_train):
         #batch size and no of epochs are variable (to abstract)
         BATCH_SIZE = int(self.config['model_config']['batch_size'])
         EPOCHS = int(self.config['model_config']['episodes'])
 
         #training (fitting)
-        history = model_m.fit(X_train, y_train, batch_size=BATCH_SIZE, epochs=EPOCHS, validation_split=0.2, verbose=2)
+        history = model_m.fit(x_train, y_train, batch_size=BATCH_SIZE, epochs=EPOCHS, validation_split=0.2, verbose=2)
 
         #plotting loss functions
         plt.plot(history.history['loss'])

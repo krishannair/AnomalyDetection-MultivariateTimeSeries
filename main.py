@@ -1,9 +1,9 @@
-import AnomalyDetectPackage.wrapper as wp
+from AnomalyDetectPackage.anomaly_detect import *
 def main():
-    wrapper_obj = wp.Wrapper()
-    wrapper_obj.model_defining()
-    wrapper_obj.model_training()
-    wrapper_obj.model_validaton()
+    detect_obj = AnomalyDetect()
+    detect_obj.model_defining()
+    detect_obj.model_training()
+    detect_obj.model_validaton()
 
 if __name__ == "__main__":
-    main()  
+    raise SystemExit(main())  

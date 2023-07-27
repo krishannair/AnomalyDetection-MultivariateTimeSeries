@@ -8,7 +8,7 @@ readme = "README.md"
 packages = [{include = "anomaly_detect"}]
 
 [tool.poetry.dependencies]
-python = ">=3.10,<3.11"
+python = ">=3.10.7,<3.11"
 tensorflow = "2.12.0"
 numpy = "1.23.5"
 pandas = "^2.0.3"

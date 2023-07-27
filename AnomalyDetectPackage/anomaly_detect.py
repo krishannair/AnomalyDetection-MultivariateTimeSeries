@@ -1,11 +1,11 @@
-from . import dataset
-from . import model
-class Wrapper:
-    data = dataset.Data()
-    model_obj = model.Model()
-    model1 = None
+import AnomalyDetectPackage.datasets as datasets #Not able to import * here... Data() is becoming unknown
+import AnomalyDetectPackage.models as models
+class AnomalyDetect:
     def __init__(self) -> None:
-        pass
+        self.data = datasets.Data()
+        self.model_obj = models.Model()
+        self.model1 = None
+
     def model_defining(self):
         self.data.read_labels()
         self.data.read_source_data()

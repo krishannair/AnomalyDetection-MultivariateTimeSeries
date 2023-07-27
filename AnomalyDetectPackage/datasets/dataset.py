@@ -9,19 +9,18 @@ from keras.utils import to_categorical
 from sklearn.preprocessing import StandardScaler
 
 class Data:
-    config = ConfigParser()
-    config.read("configur.ini")
-    path = config['paths']['inputlocation']
-    inputDataframe = pd.DataFrame()
-    outDataframe = pd.DataFrame()
-    rev_label_dict = {}
-    train_x = None
-    train_y = None
-    test_x = None
-    test_y = None
 
     def __init__(self) -> None:
-        pass
+        self.config = ConfigParser()
+        self.config.read("configur.ini")
+        self.path = self.config['paths']['inputlocation']
+        self.inputDataframe = pd.DataFrame()
+        self.outDataframe = pd.DataFrame()
+        self.rev_label_dict = {}
+        self.train_x = None
+        self.train_y = None
+        self.test_x = None
+        self.test_y = None
         
     def __dataset_read(self, data_file, file_type):
         if file_type == 'csv' or file_type == 'txt':
