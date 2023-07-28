@@ -42,10 +42,10 @@ class Model:
         f2 = 100
         f3 = 160
         f4 = 160
-        kernel_size = 6 #length of window
-        pool_size = 3
-        dropout_rate = 0.5
-        out_dimension = 3
+        kernel_size = int(self.config['model_config']['kernel_size']) #length of window
+        pool_size = int(self.config['model_config']['pool_size'])
+        dropout_rate = float(self.config['model_config']['dropout_rate'])
+        out_dimension = int(self.config['model_config']['out_dimension'])
         #end
 
         #model defining
@@ -81,12 +81,12 @@ class Model:
         plt.legend(['loss', 'val_loss'])
         plt.show()
     
-    def prediction(self, x_test, model):
+    def predict(self, x_test, model):
         pred = model.predict(x_test)
         return pred
 
-    def validation(self, x_test, y_test, label_dict, model):
-        pred = self.prediction(x_test, model)
+    def validate(self, x_test, y_test, label_dict, model):
+        pred = self.predict(x_test, model)
         pred_test = np.argmax(pred, axis = 1)
         print(classification_report([label_dict[np.argmax(label)] for label in y_test], 
                                     [label_dict[label] for label in pred_test]))

@@ -27,7 +27,9 @@ config["model_config"] = {
     "time_periods" : "60",
     "num_sensors" : "4",
     "optimizer" : "adam",
-    "metrics" : "accuracy"
+    "metrics" : "accuracy",
+    "episodes" : "10",
+    "batch_size" : "16"
 }
 config["req_out"] = {
     "req_out" : "Cooler"

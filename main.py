@@ -1,6 +1,6 @@
-from AnomalyDetectPackage.anomaly_detect import *
+import AnomalyDetectPackage as ad
 def main():
-    detect_obj = AnomalyDetect()
+    detect_obj = ad.AnomalyDetect()
     detect_obj.model_defining()
     detect_obj.model_training()
     detect_obj.model_validaton()
