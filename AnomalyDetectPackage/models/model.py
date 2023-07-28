@@ -16,50 +16,52 @@ class Model:
     def __init__(self) -> None:
         self.config = ConfigParser()
         self.config.read("configur.ini")
+        self.loss_function = self.config['model_config']['loss_fun']
+        self.activation_function = self.config['model_config']['act_fun']
+        self.dense_activation = self.config['model_config']['dense_act_fun']
+        self.time_periods = int(self.config['model_config']['time_periods'])
+        self.num_sensors = int(self.config['model_config']['num_sensors'])
+        self.optimizer = self.config['model_config']['optimizer']
+        self.dropout_rate = float(self.config['model_config']['dropout_rate'])
+        self.out_dimension = int(self.config['model_config']['out_dimension'])
+        
+        #output dimensionality (no of output filters)
+        self.units_rnn = 100
+        self.f1 = 100
+        self.f2 = 100
+        self.f3 = 160
+        self.f4 = 160
+        self.metrics = self.config['model_config_cnn']['metrics']
+        self.kernel_size = int(self.config['model_config_cnn']['kernel_size']) #length of window
+        self.pool_size = int(self.config['model_config_cnn']['pool_size'])
 
-    def architecture2(self, train_x):
+    def architecture2(self):
+
         model = Sequential()
-        model.add(LSTM(100, input_shape=(train_x.shape[1], train_x.shape[2])))
-        model.add(Dropout(0.2))
-        model.add(Dense(1))
-        model.compile(loss=self.config['model_config']['loss_fun'], optimizer=self.config['model_config']['optimizer'])
+        model.add(LSTM(self.units_rnn, activation = self.activation_function,input_shape=(1, self.num_sensors*self.time_periods)))
+        model.add(Dropout(self.dropout_rate))
+        model.add(Dense(self.out_dimension, activation=self.dense_activation))
+        model.compile(loss=self.loss_function, optimizer=self.optimizer)
         print(model.summary())
         return model
 
     def architecture(self):
         #TO BE abstracted 
         #start
-        LOSS_FUNCTION = self.config['model_config']['loss_fun']
-        ACTIVATION_FUNCTION = self.config['model_config']['act_fun']
-        DENSE_ACTIVATION = self.config['model_config']['dense_act_fun']
-        TIME_PERIODS = int(self.config['model_config']['time_periods'])
-        num_sensors = int(self.config['model_config']['num_sensors'])
-        OPTIMIZER = self.config['model_config']['optimizer']
-        METRICS = self.config['model_config']['metrics']
-        
-        #output dimensionality (no of output filters)
-        f1 = 100
-        f2 = 100
-        f3 = 160
-        f4 = 160
-        kernel_size = int(self.config['model_config']['kernel_size']) #length of window
-        pool_size = int(self.config['model_config']['pool_size'])
-        dropout_rate = float(self.config['model_config']['dropout_rate'])
-        out_dimension = int(self.config['model_config']['out_dimension'])
         #end
 
         #model defining
         model_m = Sequential()
-        model_m.add(Conv1D(f1, kernel_size, activation=ACTIVATION_FUNCTION, input_shape=(TIME_PERIODS, num_sensors)))
-        model_m.add(Conv1D(f2, kernel_size, activation=ACTIVATION_FUNCTION))
-        model_m.add(MaxPooling1D(pool_size))
-        model_m.add(Conv1D(f3, kernel_size, activation=ACTIVATION_FUNCTION))
-        model_m.add(Conv1D(f4, kernel_size, activation=ACTIVATION_FUNCTION))
+        model_m.add(Conv1D(self.f1, self.kernel_size, activation=self.activation_function, input_shape=(self.time_periods, self.num_sensors)))
+        model_m.add(Conv1D(self.f2, self.kernel_size, activation=self.activation_function))
+        model_m.add(MaxPooling1D(self.pool_size))
+        model_m.add(Conv1D(self.f3, self.kernel_size, activation=self.activation_function))
+        model_m.add(Conv1D(self.f4, self.kernel_size, activation=self.activation_function))
         model_m.add(GlobalAveragePooling1D(name='G_A_P_1D'))
-        model_m.add(Dropout(dropout_rate))
-        model_m.add(Dense(out_dimension, activation=DENSE_ACTIVATION))
+        model_m.add(Dropout(self.dropout_rate))
+        model_m.add(Dense(self.out_dimension, activation=self.dense_activation))
         print(model_m.summary())
-        model_m.compile(loss=LOSS_FUNCTION, optimizer=OPTIMIZER, metrics=[METRICS])
+        model_m.compile(loss=self.loss_function, optimizer=self.optimizer, metrics=[self.metrics])
 
         return model_m
 
@@ -103,7 +105,6 @@ class Model:
 
         plt.imshow(cm, interpolation='nearest', cmap=cmap)
         plt.title(title, fontsize=25)
-        #plt.colorbar()
         tick_marks = np.arange(len(classes))
         plt.xticks(tick_marks, classes, rotation=90, fontsize=15)
         plt.yticks(tick_marks, classes, fontsize=15)
