@@ -20,7 +20,7 @@ class Model:
         self.activation_function = self.config['model_config']['act_fun']
         self.dense_activation = self.config['model_config']['dense_act_fun']
         self.time_periods = int(self.config['model_config']['time_periods'])
-        self.num_sensors = int(self.config['model_config']['num_sensors'])
+        self.num_sensors = int(len(self.config['file_names']['sensors'].split(',')))
         self.optimizer = self.config['model_config']['optimizer']
         self.dropout_rate = float(self.config['model_config']['dropout_rate'])
         self.out_dimension = int(self.config['model_config']['out_dimension'])
@@ -36,7 +36,6 @@ class Model:
         self.pool_size = int(self.config['model_config_cnn']['pool_size'])
 
     def architecture2(self):
-
         model = Sequential()
         model.add(LSTM(self.units_rnn, activation = self.activation_function,input_shape=(1, self.num_sensors*self.time_periods)))
         model.add(Dropout(self.dropout_rate))
@@ -46,10 +45,6 @@ class Model:
         return model
 
     def architecture(self):
-        #TO BE abstracted 
-        #start
-        #end
-
         #model defining
         model_m = Sequential()
         model_m.add(Conv1D(self.f1, self.kernel_size, activation=self.activation_function, input_shape=(self.time_periods, self.num_sensors)))
