@@ -4,3 +4,4 @@ The configur.ini file should be in the folder just outside the folder containing
 Installing the dependencies using Poetry causes the tensorflow package to not be installed properly 
 then you will have to uninstall tensorflow from the virtual environment created by poetry using "poetry uninstall tensorflow" 
 and then reinstall tensorflow by activating the virtual environment and running the command "python -m pip install tensorflow=="2.12.0".
+Run the package by python -m AnomalyDetect
